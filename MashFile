@@ -13,6 +13,18 @@ tasks:
         cmd = "bin/sdx wrap mash -runtime runtime/macosx"
       - file::copy
         src = mash
-        dest = dist/mash
+        dest = dist/mash.macos
       - sys::run
-        cmd = "echo \"{{sudo_password}}\" | sudo -S cp dist/mash /usr/local/bin/mash"
+        cmd = "bin/sdx wrap mash -runtime runtime/linux_64"
+      - file::copy
+        src = mash
+        dest = dist/mash.linux64
+      - sys::run
+        cmd = "bin/sdx wrap mash -runtime runtime/win_64"
+      - file::copy
+        src = mash
+        dest = dist/mash.win64
+      - file::delete
+        path = mash    
+      - sys::run
+        cmd = "echo \"{{sudo_password}}\" | sudo -S cp dist/mash.macos /usr/local/bin/mash"
