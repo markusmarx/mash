@@ -3,6 +3,7 @@ group: dev
 tasks:
   dist:
     name: "Create distribution"
+    context: .
     cmd:
       - file::delete
         path = dist

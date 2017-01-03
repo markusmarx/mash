@@ -62,4 +62,30 @@ test file_template {
 	file delete $destPath
 }
 
+## file_link
+## test simple file link
+#
+##
+test file_link {
+} -body {
+	set filePath [file join [temporaryDirectory] file_template/test.tmpl]
+	set linkPath [file join [temporaryDirectory] test.link]
+	file::link file $filePath name $linkPath type symbolic
+	file exist $linkPath
+} -result {1} -cleanup {
+	file delete $linkPath
+}
 
+## file_link
+## test simple file without type
+#
+##
+test file_link {
+} -body {
+	set filePath [file join [temporaryDirectory] file_template/test.tmpl]
+	set linkPath [file join [temporaryDirectory] test.link]
+	file::link file $filePath name $linkPath
+	file exist $linkPath
+} -result {1} -cleanup {
+	file delete $linkPath
+}

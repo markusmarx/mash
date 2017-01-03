@@ -43,7 +43,28 @@ namespace eval file {
        { dest  string  ""      }
        { force boolean 0       }
     }
+
+    argp::registerArgs link {
+       { file   string  ""              }
+       { name   string  ""              }
+       { type   string  "symbolic hard" }
+    }
+
 }
+
+##
+# 
+##
+proc file::link { args } {
+    argp::parseArgs processargs
+    set type "-$processargs(type)"
+    if {[string length $type]} {
+        set type "-symbolic"
+    }
+
+    file link $type $processargs(name) $processargs(file)
+}
+
 
 ##
 # 
