@@ -16,6 +16,6 @@ namespace eval sys {
 ##
 proc sys::run { args } {
     argp::parseArgs processargs
-    set result [eval "exec $processargs(cmd)"]
+    set result [eval "exec -ignorestderr -keepnewline $processargs(cmd)"]
     puts $result
 }
