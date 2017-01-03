@@ -1,0 +1,81 @@
+overview: |
+  Additional testcases for mustache.tcl lambda unsafe sections.
+
+  Unsafe sections are ordinary sections which start with the unsafe marker.
+  This is without side effects for key/value-list-type sections.
+
+  These sections are required because Tcl doesn't support explicit typing.
+  Without them Tcl injection (as in "SQL injection") could take place from
+  unchecked user content. To avoid the headache coming from checking all the
+  user content for illegal input, lambdas can be selectively disabled within
+  a section.
+
+  Selectively means lambdas aren't completely disabled. What is disabled is
+  their interpolation from the user supplied section context. Instead, the
+  innermost value from the context outside the unsafe section is substituted.
+  Which may be a lambda itself - a safe one, not taken from user input. This
+  makes it possible to safely use programmer defined lambdas deep inside an
+  "unsafe" section. Content not detected as a lambda isn't affected.
+
+  The basic idea is to wrap the whole template into such an "unsafe" section
+  and define the needed lambdas outside. Or with finer sectioning, at the
+  programmers choice.
+tests:
+  - name: Unsafe - Values
+    desc: Lambdas inside unsafe section should be replaced by safe values.
+    data:
+      userdata: 'Sure I am'
+      name: 'sleepyhead'
+      unsafe:
+        λtcl: false
+        userdata: 'Λtcl {return "I do evil things"}'
+        name: 'mindful programmer'
+    template: "Are you nice? - {{#unsafe}}{{userdata}}, {{name}}{{/unsafe}}!"
+    expected: "Are you nice? - Sure I am, mindful programmer!"
+
+  - name: Unsafe - Section
+    desc: Lambda section inside unsafe section should be replaced by a safe values.
+    data:
+      safelambda: 'Λtcl {expr [join $arg *]}'
+      unsafe: 
+        λtcl: false
+        userdata: 'Λtcl {return "I do evil things with your $arg"}'
+    template: "6! == {{#unsafe}}{{#userdata}}1 2 3 4 5 6{{/userdata}}{{#safelambda}}1 2 3 4 5 6{{/safelambda}}{{/unsafe}}"
+    expected: "6! == 720"
+
+  - name: Unsafe - Iterator Section
+    desc: Lambda unsafe marker has to be evaluated for iterator sections.
+    data:
+      unsafe:
+        λtcl: false
+        userdata: a b Λtcl {return "I do evil things"} c
+    template: "{{#unsafe}}{{#userdata}}{{.}}|{{/userdata}}{{/unsafe}}"
+    expected: "a|b|Λtcl|return &quot;I do evil things&quot;|c|"
+
+  - name: Unsafe - Iterator List Valid
+    desc: Remove unsafe marker from valid iterator list values.
+    data:
+      unsafe: λtcl a b c
+    template: "{{#unsafe}}{{.}}|{{/unsafe}}"
+    expected: "a|b|c|"
+
+  - name: Unsafe - Iterator List Empty
+    desc: Don't render iterator sections which alone content is the unsafe marker.
+    data:
+      unsafe: λtcl
+    template: "{{#unsafe}}{{.}}|{{/unsafe}}"
+    expected: ""
+
+  - name: Unsafe - Iterator List Empty, Inverted Section
+    desc: Take iterator sections which alone content is the unsafe marker as empty.
+    data:
+      unsafe: λtcl
+    template: "{{^unsafe}}empty{{/unsafe}}"
+    expected: "empty"
+
+  - name: Unsafe - Iterator List Invalid
+    desc: Don't evaluate lambdas in unsafe marked iterator contexts.
+    data:
+      unsafe: λtcl a b Λtcl {return "I do evil things"} c d
+    template: "{{#unsafe}}{{.}}|{{/unsafe}}"
+    expected: "a|b|Λtcl|return &quot;I do evil things&quot;|c|d|"

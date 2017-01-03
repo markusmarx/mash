@@ -1,0 +1,22 @@
+package require tcltest
+namespace import ::tcltest::*
+
+set auto_path [linsert $auto_path 0 [file join [file dirname [info script]] "../.."]]      
+
+source [file join [file dirname [info script]] "../mash.tcl"]
+
+test parse_SimpleCommand {
+} -body {
+    mash::parseCmd "test::test" {}
+} -result "test::test"
+
+test parse_SimpleCommandWithArguments {
+} -body {
+    mash::parseCmd "test::test dest=test" {}
+} -result "test::test dest test"
+
+test parse_SimpleCommandWithArgumentsAndDict {
+} -body {
+	set vars [dict create test "path/path"]
+    mash::parseCmd "test::test dest={{test}}" $vars
+} -result "test::test dest path/path"

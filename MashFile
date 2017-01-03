@@ -1,0 +1,18 @@
+---
+group: dev
+tasks:
+  dist:
+    name: "Create distribution"
+    cmd:
+      - file::delete
+        path = dist
+        force = 1
+      - file::mkdir
+        path = dist
+      - sys::run
+        cmd = "bin/sdx wrap mash -runtime runtime/macosx"
+      - file::copy
+        src = mash
+        dest = dist/mash
+      - sys::run
+        cmd = "echo \"{{sudo_password}}\" | sudo -S cp dist/mash /usr/local/bin/mash"

@@ -1,0 +1,65 @@
+package require tcltest
+namespace import ::tcltest::*
+set auto_path [linsert $auto_path 0 [file join [file dirname [info script]] "../lib"]]
+package require argp
+package require mustache
+
+source [file join [file dirname [info script]] "../modules/file.module"]
+set vars [dict create myvar World]
+
+## file_mkdir
+## test module file::mkdir
+#
+##
+test file_mkdir {
+} -body { 
+	set testPath [file join [temporaryDirectory] file_mkdir_path/test_path]
+	file delete -force 1 $testPath
+    file::mkdir path $testPath
+    file exists $testPath
+} -result 1 -cleanup {
+	file delete -force 1 [file join [temporaryDirectory] file_mkdir_path]
+}
+
+## file_delete
+## test module file::delete without force
+#
+##
+test file_delete_without_force {
+} -body { 
+	set testPath [file join [temporaryDirectory] file_delete_path/test_path]
+	file mkdir $testPath
+ 	file::delete path $testPath force 0
+    file exists $testPath
+} -result 0 -cleanup {
+	file delete -force 1 [file join [temporaryDirectory] file_delete_path]
+}
+
+## file_delete
+## test module file::delete with force
+#
+##
+test file_delete_without_force {
+} -body { 
+	set testPath [file join [temporaryDirectory] file_delete_path/test_path]
+	file mkdir $testPath
+ 	file::delete path [file join [temporaryDirectory] file_delete_path] force 1
+    file exists [file join [temporaryDirectory] file_delete_path]
+} -result 0
+
+## file_template
+## test simple template file creation
+#
+##
+test file_template {
+} -match glob -body {
+	set tmplPath [file join [temporaryDirectory] file_template/test.tmpl]
+	set destPath [file join [temporaryDirectory] file_template/test.txt]
+	file::template tmpl $tmplPath dest $destPath
+	set fp [open $destPath r]
+	return [read $fp]
+} -result {"Hello World!"*} -cleanup {
+	file delete $destPath
+}
+
+

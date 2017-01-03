@@ -1,0 +1,1 @@
+package ifneeded mash 0.1 [list source [file join $dir mash.tcl]]

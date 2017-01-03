@@ -1,0 +1,21 @@
+namespace eval sys {
+	
+	## sys::exec
+    ## executes a command
+    #
+    #  @cmd - command to execute
+    ##
+    argp::registerArgs run {
+	   { cmd   string  ""   {}  }
+    }
+
+}
+
+##
+# 
+##
+proc sys::run { args } {
+    argp::parseArgs processargs
+    set result [eval "exec $processargs(cmd)"]
+    puts $result
+}

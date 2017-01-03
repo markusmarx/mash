@@ -1,0 +1,93 @@
+namespace eval file {
+
+    ## file::mkdir
+    ## creates all components of a directory
+    #
+    #  @path - directory to create
+    ##
+    argp::registerArgs mkdir {
+	   { path   string  ""     }
+    }
+
+    ## file::delete
+    ## creates all components of a directory
+    #
+    #  @path  directory to delete
+    #  @force if true deletes not empty directory
+    ##
+    argp::registerArgs delete {
+       { path   string  ""      }
+       { force  boolean 0       }
+    }
+
+    ## file::template
+    ## creates a new file from template and environment variables
+    #
+    #  @tmpl path to template file
+    #  @dest path to destination filename
+    ##
+    argp::registerArgs template {
+       { tmpl  string  ""      }
+       { dest  string  ""      }
+    }
+
+    ## file::copy
+    ## copy file or directory
+    #
+    #  @src   path to source directory or file
+    #  @dest  path to destination directory or file
+    #  @force if true overwrittes existing files
+    ##
+    argp::registerArgs copy {
+       { src   string  ""      }
+       { dest  string  ""      }
+       { force boolean 0       }
+    }
+}
+
+##
+# 
+##
+proc file::mkdir { args } {
+    argp::parseArgs processargs
+    file mkdir $processargs(path)
+}
+
+##
+#
+##
+proc file::delete { args } {
+    argp::parseArgs processargs
+    if {$processargs(force)} {
+        file delete -force $processargs(path)
+    } else {
+        file delete $processargs(path)
+    }
+}
+
+##
+#
+##
+proc file::template { args } {
+    argp::parseArgs processargs
+    global vars
+    set fp [open $processargs(tmpl) r]
+    set fileData [read $fp]
+    close $fp
+    set fileData [::mustache::mustache $fileData $vars]
+    set fp [open $processargs(dest) w]
+    puts $fp $fileData
+    close $fp
+}
+
+##
+#
+##
+proc file::copy { args } {
+    argp::parseArgs processargs
+    if {$processargs(force)} {
+        file copy -force $processargs(src) $processargs(dest)
+    } else {
+        file copy $processargs(src) $processargs(dest)
+    }
+}
