@@ -62,7 +62,13 @@ proc file::link { args } {
         set type "-symbolic"
     }
 
-    file link $type $processargs(name) $processargs(file)
+    set linkName $processargs(name)
+    if {[file exist $linkName]} {
+        puts "\[WARNING\] file::link $linkName exists"
+        return
+    }
+
+    file link $type $linkName $processargs(file)
 }
 
 

@@ -51,7 +51,7 @@ foreach cmds [split $argv " "] {
 	foreach action [dict get $mashFile tasks $cmds cmd] {
     set cmd [mash::parseCmd $action $vars]
 		incr currentStep
-    puts "\[$currentStep/$commandsCount\] $action"
+    puts "\[ $currentStep / $commandsCount \] $action"
     eval $cmd
 	}
 }
