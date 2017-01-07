@@ -1,0 +1,61 @@
+set auto_path [linsert $auto_path 0 [file join [file dirname [info script]] "../../mash.vfs/lib"]]
+
+package require tcltest
+package require mash
+
+namespace eval ::mash::test {
+	namespace import ::tcltest::*
+
+	## 
+	# 	task_with_name
+	##
+	test task_with_name {
+		} -body {
+			mash::task "testname" {
+				test:"testname"
+			} cmd {
+				-fasdkdk: test
+			}
+			return [struct::record show values [lindex $mash::allTasks 0]]
+		} -result {-name testname -attrs {
+				test:"testname"
+			} -modules {cmd {
+				-fasdkdk: test
+			}}}
+
+	##  
+	# 	task_without_name
+	##
+	test task_without_name {
+		} -body {
+			mash::task {
+				test:"testname"
+			} cmd {
+				-fasdkdk: test
+			}
+			return [struct::record show values [lindex $mash::allTasks 1]]
+		} -result {-name {} -attrs {
+				test:"testname"
+			} -modules {cmd {
+				-fasdkdk: test
+			}}}
+
+	test task_with_more_modules {
+		} -body {
+			mash::task {
+				test:"testname"
+			} cmd {
+				-fasdkdk: test
+			} cmd_1 {
+				-fas: test
+			}
+			return [struct::record show values [lindex $mash::allTasks 2]]	
+		} -result {-name {} -attrs {
+				test:"testname"
+			} -modules {cmd {
+				-fasdkdk: test
+			} cmd_1 {
+				-fas: test
+			}}}
+
+}

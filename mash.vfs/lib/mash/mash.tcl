@@ -1,22 +1,33 @@
 package provide mash 0.1
+package require argp
+package require struct
+
 
 namespace eval mash {
 
-	proc parseCmd {commandStr varsDict} {
-		regexp -indices {(^[^\s]*)} $commandStr location
-		set command [string range $commandStr [lindex $location 0] [lindex $location 1]]
-		set arguments [string range $commandStr [expr {[lindex $location 1] + 1}] end]
-
-		set splitArgs [split $arguments =]
-		set argumentStr ""
-		foreach {name value} $splitArgs {
-		    append argumentStr [string trim $name] " " [string trim $value] " "
-		}
-
-		if {[info exists varsDict]} {
-			set argumentStr [::mustache::mustache $argumentStr $varsDict]
-		}
-
-		return [string trim "$command $argumentStr"]
+	struct::record define TASK {
+		name
+		attrs
+		modules
 	}
+
+	set allTasks {}
+
+}
+
+##
+#	mash::task
+##
+proc mash::task {args} {
+	set task [TASK #auto]
+
+	set name ""
+	if {[expr {[llength $args] % 2}] == 0} {
+		set args [lassign $args name]
+	}
+	$task.name = $name
+	$task.modules = [lassign $args attrs]
+	$task.attrs = $attrs
+	
+	lappend mash::allTasks $task
 }
