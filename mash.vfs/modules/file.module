@@ -97,11 +97,10 @@ proc file::delete { args } {
 ##
 proc file::template { args } {
     argp::parseArgs processargs
-    global vars
     set fp [open $processargs(tmpl) r]
     set fileData [read $fp]
     close $fp
-    set fileData [::mustache::mustache $fileData $vars]
+    set fileData [::mustache::mustache $fileData $mash::allVars]
     set fp [open $processargs(dest) w]
     puts $fp $fileData
     close $fp

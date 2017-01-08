@@ -1,0 +1,37 @@
+set auto_path [linsert $auto_path 0 [file join [file dirname [info script]] "../../mash.vfs/lib"]]
+
+package require tcltest
+package require mash
+
+source [file join [file dirname [info script]] ../../mash.vfs/rules/cmd.rule.tcl]
+
+proc testFunc {args} {
+	puts "call testFunc with $args"
+}
+
+namespace eval ::mash::rules {
+	namespace import ::tcltest::*
+
+	## 
+	# 	cmd_with_success
+	##
+	test cmd_with_success {
+		} -body {
+			cmd {
+				- testFunc test=test
+				- testFunc -test=test
+			}
+		} -result {0}
+
+	## 
+	# 	cmd_with_error
+	##
+	test cmd_with_success {
+		} -body {
+			cmd {
+				-testFuncError test=test
+				-testFunc test=test
+			}
+		} -result {1}
+
+}

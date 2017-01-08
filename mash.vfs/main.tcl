@@ -19,6 +19,10 @@ foreach x [glob -dir [file join $starkit::topdir modules] *.module] {
     source $x
 }
 
+foreach x [glob -dir [file join $starkit::topdir rules] *.rule.tcl] {
+    source $x
+}
+
 set parameters {
     {file.arg "MashFile"    "Which file to execure"}
     {vars.arg ""		        "Variables"}
@@ -30,28 +34,31 @@ array set arg [cmdline::getoptions argv $parameters]
 set vars [dict create]
 
 if {[string length $arg(vars)] > 0} {
-	set vars [dict merge $vars [::yaml::yaml2dict -file $arg(vars)]]
+	set mash::allVars [dict merge $vars [::yaml::yaml2dict -file $arg(vars)]]
 }
 
 if {[string length $arg(S)] > 0} {
-  dict set vars sudo_password $arg(S)
+  dict set mash::allVars sudo_password $arg(S)
 }
 
-set mashFile [::yaml::yaml2dict -file $arg(file)]
-set commandsCount 0
-foreach cmds [split $argv " "] {
-	set commandsCount [expr { $commandsCount + [llength [dict get $mashFile tasks $cmds cmd]] }]
+proc task args {
+  mash::task $args
 }
 
-puts "mash 0.1 <markus.marx@marxenter.de>"
+source $arg(file)
+
+puts "mash 0.2 <markus.marx@marxenter.de>"
 
 set currentStep  0
-foreach cmds [split $argv " "] {
-  puts "TASK: [dict get $mashFile tasks $cmds name]"
-	foreach action [dict get $mashFile tasks $cmds cmd] {
-    set cmd [mash::parseCmd $action $vars]
-		incr currentStep
-    puts "\[ $currentStep / $commandsCount \] $action"
-    eval $cmd
-	}
+
+set cmds [split $argv " "]
+
+set tasks [mash::getTask $cmds]
+
+foreach task $tasks {
+  
+  foreach {modName modVal} [$task cget -modules] {
+    $modName "$modVal"
+  }
+
 }

@@ -4,10 +4,11 @@ set auto_path [linsert $auto_path 0 [file join [file dirname [info script]] "../
 
 package require argp
 package require mustache
+package require mash
 
 source [file join [file dirname [info script]] "../../mash.vfs/modules/file.module"]
 
-set vars [dict create myvar World]
+set mash::allVars [dict create myvar World]
 
 namespace eval ::mash::file::test {
 	namespace import ::tcltest::*
