@@ -10,7 +10,15 @@ task "dist" {
   - sys::run cmd="bin/sdx wrap mash -runtime runtime/linux_64"
   - file::copy src=mash dest = dist/mash.linux64
   - sys::run cmd="bin/sdx wrap mash -runtime runtime/win_64"
-  - file::copy src=mash dest=dist/mash.win64
+  - file::copy src=mash dest=dist/mash.win64.exe
+  - sys::run cmd="bin/sdx wrap mash -runtime runtime/win_32"
+  - file::copy src=mash dest=dist/mash.win32.exe
   - file::delete path=mash
+
+}
+
+task "dist" {
+  system: unix
+} cmd {
   - sys::run cmd="echo \"{{sudo_password}}\" | sudo -S cp dist/mash.macos /usr/local/bin/mash"
 }
