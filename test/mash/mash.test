@@ -6,50 +6,47 @@ package require mash
 namespace eval ::mash::test {
 	namespace import ::tcltest::*
 
-	## 
-	# 	task_with_name
-	##
-	test task_with_name {
+	#------------------------------------------------------------
+	test create_a_rule_with_name {
 		} -body {
-			mash::task {"testname" {
+			mash::rule add {"testname" {
 				test:"testname"
 			} cmd {
 				-fasdkdk: test
 			}}
-			return [struct::record show values [lindex $mash::allTasks 0]]
+			return [struct::record show values [lindex $mash::Rules 0]]
 		} -result {-name testname -attrs {
 				test:"testname"
 			} -modules {cmd {
 				-fasdkdk: test
 			}}}
 
-	##  
-	# 	task_without_name
-	##
-	test task_without_name {
+	#------------------------------------------------------------
+	test create_a_rule_without_name {
 		} -body {
-			mash::task {
+			mash::rule add {
 				test:"testname"
 			} cmd {
 				-fasdkdk: test
 			}
-			return [struct::record show values [lindex $mash::allTasks 1]]
+			return [struct::record show values [lindex $mash::Rules 1]]
 		} -result {-name default -attrs {
 				test:"testname"
 			} -modules {cmd {
 				-fasdkdk: test
 			}}}
 
-	test task_with_more_modules {
+	#------------------------------------------------------------
+	test create_a_rule_with_more_modules {
 		} -body {
-			mash::task "testname" {
+			mash::rule add "testname" {
 				test:"testname"
 			} cmd {
 				-fasdkdk: test
 			} cmd_1 {
 				-fas: test
 			}
-			return [struct::record show values [lindex $mash::allTasks 2]]	
+			return [struct::record show values [lindex $mash::Rules 2]]	
 		} -result {-name testname -attrs {
 				test:"testname"
 			} -modules {cmd {
@@ -58,32 +55,35 @@ namespace eval ::mash::test {
 				-fas: test
 			}}}
 
-	test find_task_by_single_name {
+	#------------------------------------------------------------
+	test find_rule_by_single_name {
 		} -body {
-			set foundTasks [mash::getTask {testname}]
+			set foundTasks [mash::rule get {testname}]
 			return $foundTasks
-		} -result {::mash::TASK0 ::mash::TASK2}
+		} -result {::mash::RULE0 ::mash::RULE2}
 
-	test find_task_by_multiple_names {
+	#------------------------------------------------------------
+	test find_rules_by_multiple_names {
 		} -body {
-			mash::task "testname-1" {
+			mash::rule add "testname-1" {
 				test:"testname"
 			} cmd {
 				-fasdkdk: test
 			}
-			set foundTasks [mash::getTask {testname-1 testname}]
+			set foundTasks [mash::rule get {testname-1 testname}]
 			return $foundTasks
-		} -result {::mash::TASK3 ::mash::TASK0 ::mash::TASK2}
+		} -result {::mash::RULE3 ::mash::RULE0 ::mash::RULE2}
 
-	test find_task_by_multiple_double_names {
+	#------------------------------------------------------------
+	test find_rules_by_multiple_double_names {
 		} -body {
-			mash::task "testname" {
+			mash::rule add "testname" {
 				test:"testname"
 			} cmd {
 				-fasdkdk: test
 			}
-			set foundTasks [mash::getTask {testname-1 testname}]
+			set foundTasks [mash::rule get {testname-1 testname}]
 			return $foundTasks
-		} -result {::mash::TASK3 ::mash::TASK0 ::mash::TASK2 ::mash::TASK4}
+		} -result {::mash::RULE3 ::mash::RULE0 ::mash::RULE2 ::mash::RULE4}
 
 }

@@ -58,7 +58,7 @@ proc cmd {args} {
 	foreach cmdItem $cmdDict {
 		if {$cmdItem != ""} {
 			puts $cmdItem
-			if [catch {eval "[parseCmd $cmdItem $mash::allVars]"}] {
+			if [catch {eval "[parseCmd $cmdItem $mash::Variables]"}] {
 				set result 1
 			}
 		}

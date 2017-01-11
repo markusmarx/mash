@@ -1,7 +1,7 @@
 ##
-#   task dist 
+#   rule dist 
 ##
-task "dist" {
+rule "dist" {
 } cmd {
   - file::delete path=dist force=1
   - file::mkdir path=dist
@@ -17,7 +17,7 @@ task "dist" {
 
 }
 
-task "dist" {
+rule "dist" {
   system: unix
 } cmd {
   - sys::run cmd="echo \"{{sudo_password}}\" | sudo -S cp dist/mash.macos /usr/local/bin/mash"

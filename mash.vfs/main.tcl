@@ -34,30 +34,27 @@ array set arg [cmdline::getoptions argv $parameters]
 set vars [dict create]
 
 if {[string length $arg(vars)] > 0} {
-	set mash::allVars [dict merge $vars [::yaml::yaml2dict -file $arg(vars)]]
+	set mash::Variables [dict merge $vars [::yaml::yaml2dict -file $arg(vars)]]
 }
 
 if {[string length $arg(S)] > 0} {
-  dict set mash::allVars sudo_password $arg(S)
+  dict set mash::Variables sudo_password $arg(S)
 }
 
-proc task args {
-  mash::task $args
-}
+source [file join $starkit::topdir rule.def.tcl]
 
 source $arg(file)
 
-puts "mash 0.2 <markus.marx@marxenter.de>"
+puts "mash 0.3 <markus.marx@marxenter.de>"
 
 set currentStep  0
 
 set cmds [split $argv " "]
 
-set tasks [mash::getTask $cmds]
+set rules [mash::rule get $cmds]
 
-foreach task $tasks {
-  
-  foreach {modName modVal} [$task cget -modules] {
+foreach rule $rules {
+  foreach {modName modVal} [$rule cget -modules] {
     $modName "$modVal"
   }
 
