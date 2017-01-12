@@ -13,6 +13,8 @@ package require mustache
 package require argp
 package require cmdline
 
+source [file join $starkit::topdir yapp.tcl]
+
 set savedDir [pwd]
 
 foreach x [glob -dir [file join $starkit::topdir modules] *.module] {
@@ -23,35 +25,55 @@ foreach x [glob -dir [file join $starkit::topdir rules] *.rule.tcl] {
     source $x
 }
 
-set parameters {
-    {file.arg "MashFile"    "Which file to execure"}
-    {vars.arg ""		        "Variables"}
-    {S.arg ""            "Sudo password"}
-}
+set tmpl {
+    "METASHELL:"
 
-array set arg [cmdline::getoptions argv $parameters]
+    { -h        n   _Axpl   y   -         -          -               "to see this message"}
+    { --help    p - - - - - - }
+
+    { -p        y   _Astr   y   fName     Mashfile   "file pattern"  "pattern for mashfiles **/Mashfile" }
+    { --pattern p - - - - - - }
+
+    { -k        y   _Astr   y   sPassword -          -               "sudo password" }
+    { --sudo    p - - - - - - }
+
+    { -         l   _Astr   y   sRules    default    "rule list"      "Rules to processed." }
+    }
+
+set sRules [AParse $tmpl $argv]
 
 set vars [dict create]
 
-if {[string length $arg(vars)] > 0} {
-	set mash::Variables [dict merge $vars [::yaml::yaml2dict -file $arg(vars)]]
-}
+#if {[string length $arg(vars)] > 0} {
+#	set mash::Variables [dict merge $vars [::yaml::yaml2dict -file $arg(vars)]]
+#}
 
-if {[string length $arg(S)] > 0} {
-  dict set mash::Variables sudo_password $arg(S)
+if {[info exist sPassword]} {
+  dict set mash::Variables sudo_password $sPassword
 }
 
 source [file join $starkit::topdir rule.def.tcl]
 
-source $arg(file)
+if {![file exist $fName]} {
+  mash::errorMsg "No Mashfile for pattern \"$fName\" found."
+  exit 1;
+}
 
-puts "mash 0.3 <markus.marx@marxenter.de>"
+source $fName
 
 set currentStep  0
 
-set cmds [split $argv " "]
+if {$sRules == ""} {
+  mash::errorMsg "No rule given."
+  exit 1
+}
 
-set rules [mash::rule get $cmds]
+set rules [mash::rule get $sRules]
+
+if {[llength $rules] == 0} {
+  mash::errorMsg "No rule found for \"$sRules\""
+  exit 1
+}
 
 foreach rule $rules {
   foreach {modName modVal} [$rule cget -modules] {
@@ -59,3 +81,4 @@ foreach rule $rules {
   }
 
 }
+exit 0;

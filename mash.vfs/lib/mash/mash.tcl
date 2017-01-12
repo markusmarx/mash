@@ -109,5 +109,23 @@ proc mash::rule_Get {name} {
 	return [::struct::list flatten $flattenTasks]
 }
 
+
+#------------------------------------------------------------
+# ::mash::errorMsg --
+#
+#	puts error message
+#
+# Arguments:
+#    
+#	msg - message
+#
+# Results:
+#   
+#------------------------------------------------------------
+#
+proc mash::errorMsg {msg} {
+	puts "mash: ***$msg Stop."
+}
+
 
 package provide mash 0.1
