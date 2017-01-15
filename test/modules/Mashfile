@@ -1,0 +1,4 @@
+rule test {
+} cmd {
+	- sys::run cmd="bin/tclkit.macosx test/modules/all.tcl"
+}

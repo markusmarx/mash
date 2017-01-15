@@ -182,7 +182,7 @@ proc mash::load {basePath pattern} {
   		exit 1;
 	}
 	foreach m $mashFiles {
-		uplevel source $mashFiles
+		uplevel source $m
 	}
 }
 
