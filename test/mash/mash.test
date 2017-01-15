@@ -86,4 +86,44 @@ namespace eval ::mash::test {
 			return $foundTasks
 		} -result {::mash::RULE3 ::mash::RULE0 ::mash::RULE2 ::mash::RULE4}
 
+	#------------------------------------------------------------
+	test find_mashfiles_by_pattern {
+	} -body {
+		makeFile "" test.mk
+		mash::findMashfiles [temporaryDirectory] "test.mk"
+	} -result {/Users/markusmarx/Development/terminal.lab/mash/test/mash/test.mk} -cleanup {
+		removeFile test.mk
+	}
+
+	#------------------------------------------------------------
+	test find_mashfiles_by_pattern_with_subdir {
+	} -body {
+		set tmp1 [makeDirectory test1]
+		makeFile "" test.mk $tmp1
+		mash::findMashfiles [temporaryDirectory] "test.mk"
+	} -result {/Users/markusmarx/Development/terminal.lab/mash/test/mash/test1/test.mk} -cleanup {
+		removeDirectory test1
+	}
+
+	#------------------------------------------------------------
+	test find_mashfiles_by_pattern_with_more_subdirs {
+	} -body {
+		set tmp1 [makeDirectory test1]
+		set tmp2 [makeDirectory test2]
+		makeFile "" test.mk $tmp1
+		makeFile "" test.mk $tmp2
+		mash::findMashfiles [temporaryDirectory] "*.mk"
+	} -result {/Users/markusmarx/Development/terminal.lab/mash/test/mash/test1/test.mk\
+		/Users/markusmarx/Development/terminal.lab/mash/test/mash/test2/test.mk} -cleanup {
+		removeDirectory test1
+		removeDirectory test2
+	}
+
+	#------------------------------------------------------------
+	test sort_filepaths {
+	} -body {
+		mash::pathSort {/test/test/test /test /test/test /test/test1}
+	} -result {/test /test/test /test/test1 /test/test/test}
+
+
 }

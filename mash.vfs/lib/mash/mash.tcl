@@ -1,5 +1,6 @@
 package require argp
 package require struct
+package require fileutil
 
 
 namespace eval ::mash {
@@ -127,5 +128,62 @@ proc mash::errorMsg {msg} {
 	puts "mash: ***$msg Stop."
 }
 
+
+#------------------------------------------------------------
+# ::mash::findMashfiles --
+#
+#	find files by pattern
+#
+# Arguments:
+#    
+#	basePath - base search path
+#   patter   - glob pattern
+#
+# Results:
+#   
+#------------------------------------------------------------
+#
+proc mash::findMashfiles {basePath pattern} {
+	proc match {name} {
+		upvar pattern pattern
+		return [string match $pattern $name]
+	}
+	return [fileutil::find $basePath match]
+}
+
+
+#------------------------------------------------------------
+# ::mash::findMashfiles --
+#
+#	find files by pattern
+#
+# Arguments:
+#    
+#	basePath - base search path
+#   patter   - glob pattern
+#
+# Results:
+#   
+#------------------------------------------------------------
+#
+proc mash::pathSort {pathlist} {
+	proc filepathsort {item1 item2} {
+		set l1 [llength [file split $item1]]
+		set l2 [llength [file split $item2]]
+		return [expr {$l1-$l2}]
+	}
+	return [lsort -command filepathsort $pathlist]
+}
+
+proc mash::load {basePath pattern} {
+	set mashFiles [mash::pathSort [mash::findMashfiles $basePath $pattern]]
+	if {[llength $mashFiles] == 0} {
+  		mash::errorMsg "No Mashfile for pattern \"$pattern\" found."
+  		exit 1;
+	}
+	foreach m $mashFiles {
+		uplevel source $mashFiles
+	}
+}
 
 package provide mash 0.1

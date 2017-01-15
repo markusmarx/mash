@@ -26,12 +26,12 @@ foreach x [glob -dir [file join $starkit::topdir rules] *.rule.tcl] {
 }
 
 set tmpl {
-    "METASHELL:"
+    "METASHELL v.0.4:"
 
     { -h        n   _Axpl   y   -         -          -               "to see this message"}
     { --help    p - - - - - - }
 
-    { -p        y   _Astr   y   fName     Mashfile   "file pattern"  "pattern for mashfiles **/Mashfile" }
+    { -p        y   _Astr   y   fName     Mashfile   "file pattern"  "find pattern for mashfiles e.g. Mashfile" }
     { --pattern p - - - - - - }
 
     { -k        y   _Astr   y   sPassword -          -               "sudo password" }
@@ -54,12 +54,7 @@ if {[info exist sPassword]} {
 
 source [file join $starkit::topdir rule.def.tcl]
 
-if {![file exist $fName]} {
-  mash::errorMsg "No Mashfile for pattern \"$fName\" found."
-  exit 1;
-}
-
-source $fName
+mash::load [pwd] $fName
 
 set currentStep  0
 
