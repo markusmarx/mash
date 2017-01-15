@@ -1,0 +1,38 @@
+##
+#   rule dist 
+##
+rule "dist" {
+} cmd {
+  - file::delete path=dist force=1
+  - file::mkdir path=dist
+  - sys::run cmd="bin/sdx wrap mash -runtime runtime/macosx"
+  - file::copy src=mash dest = dist/mash.macos
+  - sys::run cmd="bin/sdx wrap mash -runtime runtime/linux_64"
+  - file::copy src=mash dest = dist/mash.linux64
+  - sys::run cmd="bin/sdx wrap mash -runtime runtime/win_64"
+  - file::copy src=mash dest=dist/mash.win64.exe
+  - sys::run cmd="bin/sdx wrap mash -runtime runtime/win_32"
+  - file::copy src=mash dest=dist/mash.win32.exe
+  - file::delete path=mash
+
+}
+
+rule "dist" {
+  system: unix
+} cmd {
+  - sys::run cmd="echo \"{{sudo_password}}\" | sudo -S cp dist/mash.macos /usr/local/bin/mash"
+}
+
+#rule test {
+#  dependsOn:
+#    - test
+#    - ...
+#  vars:
+#    tester: "{{root}}/bin/tclkit.{{system}}"
+#  applyto:
+#    - test/modules
+#    - test/rules
+#    - test/mash
+#} cmd {
+#  - sys::run cmd="{{tester}} test/modules/all.tcl"
+#}
