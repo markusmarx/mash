@@ -22,3 +22,15 @@ rule "dist" {
 } cmd {
   - sys::run cmd="echo \"{{sudo_password}}\" | sudo -S cp dist/mash.macos /usr/local/bin/mash"
 }
+
+#rule test {
+#  dependOn:
+#  vars:
+#    tester: "{{root}}/bin/tclkit.{{system}}"
+#  applyto:
+#   - test/modules
+#    - test/rules
+#    - test/mash
+#} cmd {
+#  - sys::run cmd="{{tester}} test/modules/all.tcl"
+#}
