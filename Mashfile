@@ -1,7 +1,10 @@
+
+
 ##
 #   rule dist 
 ##
 rule "dist" {
+  id: main
 } cmd {
   - file::delete path=dist force=1
   - file::mkdir path=dist
@@ -14,7 +17,6 @@ rule "dist" {
   - sys::run cmd="bin/sdx wrap mash -runtime runtime/win_32"
   - file::copy src=mash dest=dist/mash.win32.exe
   - file::delete path=mash
-
 }
 
 rule "dist" {
