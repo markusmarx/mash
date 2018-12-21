@@ -1,0 +1,4 @@
+test:
+	exec ls
+	file mkdir testobject
+	file delete -force testobject

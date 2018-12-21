@@ -1,0 +1,20 @@
+OS = $tcl_platform(os)
+
+# Make a distribution. Be sure to "clean -r" first
+dist:
+    cd $(MAKEDIR)
+    file delete -force dist
+    file mkdir dist
+    exec bin/sdx wrap mash -runtime runtime/macosx
+    file copy mash dist/mash.macos
+    exec bin/sdx wrap mash -runtime runtime/linux_64
+    file copy mash dist/mash.linux64
+    exec bin/sdx wrap mash -runtime runtime/win_64
+    file copy mash dist/mash.win64.exe
+    exec bin/sdx wrap mash -runtime runtime/win_32
+    file copy mash dist/mash.win32.exe
+    file delete -force mash
+    file copy -force [glob dist/mash.*] bin
+
+test:
+    exec tclsh mash.vfs/main.tcl -f test.tmk

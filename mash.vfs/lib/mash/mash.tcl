@@ -148,7 +148,7 @@ proc mash::findMashfiles {basePath pattern} {
 		upvar pattern pattern
 		return [string match $pattern $name]
 	}
-	return [fileutil::find $basePath match]
+	return [file join $basePath "Mashfile"]
 }
 
 
