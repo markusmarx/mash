@@ -299,7 +299,7 @@ proc _update {target caller dependencies terminal cmd} {
 			#close $pipe
    		}
 
-   			set errorcode [catch {uplevel #0 "eval $execute"} msg]
+   			set errorcode [catch {uplevel #0 "$execute"} msg]
 	    if $errorcode {
 			# There was a return error code
 			if { $errorcode == 3 } {

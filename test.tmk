@@ -1,4 +1,9 @@
+OS = $tcl_platform(os)
+
 test:
 	exec ls
 	file mkdir testobject
 	file delete -force testobject
+	@if [string match "Darwin" $(OS)] [puts "its Darwin"]
+
+	@if ![string match "Darwin" $(OS)] [puts "its not Darwin"]
