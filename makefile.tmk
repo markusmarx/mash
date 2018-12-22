@@ -7,9 +7,9 @@ dist: test
     file copy mash dist/mash.macos
     exec bin/sdx wrap mash -runtime runtime/linux_64
     file copy mash dist/mash.linux64
-    exec bin/sdx wrap mash -runtime runtime/win_64
+    exec bin/sdx wrap mash -runtime runtime/win_64.exe
     file copy mash dist/mash.win64.exe
-    exec bin/sdx wrap mash -runtime runtime/win_32
+    exec bin/sdx wrap mash -runtime runtime/win_32.exe
     file copy mash dist/mash.win32.exe
     file delete -force mash
     eval file copy -force [glob dist/mash.*] bin
