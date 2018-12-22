@@ -1,7 +1,7 @@
 OS = $tcl_platform(os)
 EQUAL = test=test
 TWO_VARS = $(OS) $(EQUAL)
-
+TEST = ""
 test:
 	exec ls
 	file mkdir testobject
@@ -14,3 +14,8 @@ env:
 	puts "PATH=$env(PATH)"
 	puts "OS=$env(OS)"
 	puts "$(TWO_VARS)"
+
+func:
+	if [is_empty $(TEST)] {puts "is empty"}
+	cmd docker ps
+	if [is_empty $(TEST)] {cmd docker ps}

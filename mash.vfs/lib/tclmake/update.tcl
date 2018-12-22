@@ -30,6 +30,9 @@
 #                                        COPYRIGHTENDKEY
 #######################################################################
 
+foreach x [glob -dir [file join $_topdir modules] *.tcl] {
+	source $x
+}
 
 #######################################################################
 #### _leeryGlob
@@ -297,9 +300,9 @@ proc _update {target caller dependencies terminal cmd} {
 			#    puts $line
 			#}
 			#close $pipe
-   		}
+		}
 
-   			set errorcode [catch {uplevel #0 "$execute"} msg]
+		set errorcode [catch {uplevel #0 "$execute"} msg]
 	    if $errorcode {
 			# There was a return error code
 			if { $errorcode == 3 } {
@@ -310,10 +313,6 @@ proc _update {target caller dependencies terminal cmd} {
 			    _error $msg
 			}
 	    }
-   	
-
-	    
-
 	    
 	}
     }

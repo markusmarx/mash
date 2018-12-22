@@ -1,4 +1,0 @@
----
-file:
-	mkdir: Create directory {{path}}.
-  delete: Deletes {{path}}.
