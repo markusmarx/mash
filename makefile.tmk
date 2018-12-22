@@ -15,4 +15,4 @@ dist:
     eval file copy -force [glob dist/mash.*] bin
 
 test:
-    exec tclsh mash.vfs/main.tcl -f test.tmk
+    exec tclsh mash.vfs/main.tcl -f test.tmk test env

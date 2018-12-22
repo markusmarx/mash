@@ -104,16 +104,16 @@ proc _parseFile {filename} {
 	    }
 	    uplevel #0 $tclproc
 
-	} elseif [regexp "^${space}(.*)${space}=${space}(.*)$" $line \
+	} elseif [regexp "^${space}(${stem})${space}=${space}(.*)$" $line \
 		_ name value] {
 	    # Variable definition. Set only if doesn't already exist,
 	    # so as not to overwrite command-line vars.
 	    set name [string trim $name]
 	    if ![info exists _vars($name)] {
-		set _vars($name) $value
-		if $_flags(debug) {
-		    puts "$name = $value"
-		}
+			set _vars($name) $value
+			if $_flags(debug) {
+			    puts "$name = $value"
+			}
 	    }
 	} elseif [regexp "^\.($stem)\.($stem)${space}:$space$" \
 		_ dep tgt] {

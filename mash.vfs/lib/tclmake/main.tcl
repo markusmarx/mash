@@ -126,7 +126,7 @@ proc _tclmake {args} {
 
     # Print the current directory
     puts [pwd]
-
+    
     # Process command-line arguments
     if [eval _processCommandLine $args] {
 	return 1
@@ -180,6 +180,10 @@ proc _tclmake {args} {
 
     # Parse it
     _parseFile $file
+
+    foreach {key value} [array get _vars] {
+    	catch {uplevel #0 "set ::env($key) $value"} msg]
+	}
 
     # Check that all command-line options have now been
     # defined

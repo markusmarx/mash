@@ -110,6 +110,7 @@ proc tclmake {args} {
 		eval _tclmake $args
     }
     set script [subst -nocommands $script]
+
     $interp eval $script
 }
 
@@ -125,7 +126,12 @@ proc _tclmake {args} {
     global env
 
     # Print the current directory
-    puts [pwd]
+    #puts [pwd]
+    puts "test"
+    foreach {key value} [array get $_vars] {
+    	puts $value
+    	set env($key) $value
+	}
 
     # Process command-line arguments
     if [eval _processCommandLine $args] {

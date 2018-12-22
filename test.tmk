@@ -1,9 +1,16 @@
 OS = $tcl_platform(os)
+EQUAL = test=test
+TWO_VARS = $(OS) $(EQUAL)
 
 test:
 	exec ls
 	file mkdir testobject
 	file delete -force testobject
 	@if [string match "Darwin" $(OS)] [puts "its Darwin"]
-
 	@if ![string match "Darwin" $(OS)] [puts "its not Darwin"]
+	puts "Shows a variable with = $(EQUAL)"
+
+env:
+	puts "PATH=$env(PATH)"
+	puts "OS=$env(OS)"
+	puts "$(TWO_VARS)"
