@@ -7,10 +7,9 @@ proc not_empty {string} {
 }
 
 proc show {filename} {
-	set fp [open $filename r]
-	set file_data [read $fp]
-	puts [subst  -nobackslashes -nocommands $file_data]
-	close $fp
+	global showfile
+	set showfile $filename
+	uplevel #0 {set fp [open $showfile r]; puts "[subst  -nobackslashes -nocommands [read $fp]]"; close $fp}
 }
 
 proc cmd {args} {
