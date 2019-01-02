@@ -16,6 +16,4 @@ env:
 	puts "$(TWO_VARS)"
 
 func:
-	if [is_empty $(TEST)] {puts "is empty"}
-	cmd docker ps
-	if [is_empty $(TEST)] {cmd docker ps}
+	@if [is_empty $(TEST)] {puts "is empty"}

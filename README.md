@@ -1,5 +1,4 @@
-# mash - Metabuild Tool
-Its not a build tool in common manner. Like ansible it provides functions to prepare and follow up builds.
+# mash - Plattform independent make tool
 
 # Functions
 

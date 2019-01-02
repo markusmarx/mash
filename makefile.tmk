@@ -1,18 +1,28 @@
-# Make a distribution. Be sure to "clean -r" first
-dist: test
-    cd $(MAKEDIR)
-    file delete -force dist
-    file mkdir dist
-    exec bin/sdx wrap mash -runtime runtime/macosx
-    file copy mash dist/mash.macos
-    exec bin/sdx wrap mash -runtime runtime/linux_64
-    file copy mash dist/mash.linux64
-    exec bin/sdx wrap mash -runtime runtime/win_64.exe
-    file copy mash dist/mash.win64.exe
-    exec bin/sdx wrap mash -runtime runtime/win_32.exe
-    file copy mash dist/mash.win32.exe
-    file delete -force mash
-    eval file copy -force [glob dist/mash.*] bin
+proc compile {dest filename runtime} {
+    file delete -force $dest;
+    file mkdir $dest;
+    puts "create executable for runtime $runtime";
+    exec bin/sdx wrap mash -runtime $runtime;
+    file copy mash [file join $dest "$filename"];
+    file delete -force mash;
+}
 
+help:
+    @show HELP.txt
+
+win32:
+    compile dist/win32 mash.exe runtime/win_32.exe
+
+win64:
+    compile dist/win64 mash.exe runtime/win_64.exe
+
+linux:
+    compile dist/linux mash runtime/linux_64
+
+macosx:
+    compile dist/macosx mash runtime/macosx
+
+dist: test win32 win64 linux macosx
+    
 test:
     exec tclsh mash.vfs/main.tcl -f test.tmk test env func
