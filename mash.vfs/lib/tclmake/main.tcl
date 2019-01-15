@@ -167,7 +167,7 @@ proc _tclmake {args} {
 	puts "Processing rules..."
     }
     foreach goal [concat $_goals $_optiongoals] {
-	_updateTarget $goal
+	  _updateTarget $goal
     }
 }
 
@@ -242,26 +242,24 @@ proc _processCommandLine {args} {
 # the relevant text!
 # 
 proc _help {} {
-    puts "Notmake, version 0.1. Usage:"
+    puts "Mash (based on Notmake), version 0.2. Usage:"
     puts {
 -d 
 --debug 
       Print debugging information. 
 -f filename 
 --file filename 
-      Use this file as the tclmakefile. 
+      Use this file as the makefile. 
 -h 
 --help 
       Print out this list of options. 
 -p 
 --packages 
       Recursively process directories that contain a pkgIndex.tcl file.
-      This option is unique to tclmake 
 -r 
 --recursive 
-      After processing the current directory, tclmake will process
-      sub-directories (see below for more information). This option is
-      unique to tclmake 
+      After processing the current directory, mash will process
+      sub-directories (see below for more information). 
 -s 
 --silent 
 --quiet 
