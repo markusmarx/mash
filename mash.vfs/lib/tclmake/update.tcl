@@ -166,7 +166,7 @@ proc _updateTarget {target {caller {}}} {
     }
 
     if { !$updated && $_flags(debug) } {
-	puts "Nothing to do for $target"
+		puts "Nothing to do for $target"
     }
     # Return 1 if the target was updated in any rule
     return $updated
@@ -180,12 +180,12 @@ proc _updateTarget {target {caller {}}} {
 # updated, otherwise 0.
 #
 proc _update {target caller dependencies terminal cmd} {
-    global _updated _flags _goals
+    global _updated _flags _goals _vars
 
     # If the caller is empty, then this must be a top-level call,
     # so use the goals
     if { $caller == "" } {
-	set caller $_goals
+	  set caller $_goals
     }
 
     # Process each dependency and figure out if the target
@@ -268,6 +268,9 @@ proc _update {target caller dependencies terminal cmd} {
 	if $_flags(debug) {
 	    puts "Executing command to update $target:"
 	}
+
+	cd $_vars(MAKEDIR) 
+
 	# Scan for and remove any leading "@" signs. If there is
 	# no leading @-sign, print the command.
 	# append cmd \n
@@ -295,11 +298,6 @@ proc _update {target caller dependencies terminal cmd} {
 
 	   	if [string match "exec" [lindex $exStr 0]] {
 	   		set execute [join [lreplace $execute 0 0 "exec >&@stdout <@stdin"] " "]
-	   		#set pipe [open "| $execute" r]
-			#while {[gets $pipe line] >= 0} {
-			#    puts $line
-			#}
-			#close $pipe
 		}
 
 		set errorcode [catch {uplevel #0 "$execute"} msg]

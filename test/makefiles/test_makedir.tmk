@@ -1,0 +1,17 @@
+dir1:
+	file mkdir test1
+	cd test1
+
+dir2:
+	file mkdir test2
+	cd test2
+
+dir: dir1 dir2
+	if { [file exists test1] == 0 } {
+		error "test1 not exist"
+	}
+	if { [file exists test2] == 0 } {
+		error "test2 not exist"
+	}
+	file delete test1
+	file delete test2

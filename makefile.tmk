@@ -26,3 +26,4 @@ dist: test win32 win64 linux macosx
     
 test:
     exec tclsh mash.vfs/main.tcl -f test.tmk test env func
+    exec tclsh mash.vfs/main.tcl -f test/makefiles/test_makedir.tmk dir
