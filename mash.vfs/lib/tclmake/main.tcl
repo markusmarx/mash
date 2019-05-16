@@ -90,7 +90,7 @@ proc _tclmake {args} {
     global env
 
     # Print the current directory
-    puts [pwd]
+    #puts "wor[pwd]"
     
     # Process command-line arguments
     if [eval _processCommandLine $args] {

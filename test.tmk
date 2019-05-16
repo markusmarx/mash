@@ -2,6 +2,7 @@ OS = $tcl_platform(os)
 EQUAL = test=test
 TWO_VARS = $(OS) $(EQUAL)
 TEST = ""
+TESTVAR = "testvar1"
 test:
 	exec ls
 	file mkdir testobject
@@ -17,3 +18,7 @@ env:
 
 func:
 	@if [is_empty $(TEST)] {puts "is empty"}
+
+template:
+	substitute test.substitute out.substitute
+	template test.template out.template

@@ -11,7 +11,7 @@
 
 ## Require lambda package from tcllib.
 ## If you don't need mustache to support lambdas, you can leave this out.
-package require lambda
+#package require lambda
 
 
 namespace eval ::mustache {

@@ -1,3 +1,5 @@
+
+
 proc is_empty {string} {
     expr {![binary scan $string c c]}
 }
