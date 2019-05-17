@@ -43,6 +43,7 @@ array set _flags {
     packages 0
     recursive 0
     silent 0
+    profile {}
 }
 
 # The goals: targets that need to be updated
@@ -94,7 +95,7 @@ proc _tclmake {args} {
     
     # Process command-line arguments
     if [eval _processCommandLine $args] {
-	return 1
+		return 1
     }
 
     # Find the makefile
@@ -137,10 +138,19 @@ proc _tclmake {args} {
 
     # If still not, then look in TCLMAKE_LIBRARY
     if { $file == "" } {
-	set file [file join $env(TCLMAKE_LIBRARY) mk default.tmk]
+		set file [file join $env(TCLMAKE_LIBRARY) mk default.tmk]
     }
     if $_flags(debug) {
-	puts "Reading file \"$file\""
+		puts "Reading file \"$file\""
+    }
+
+    if { $_flags(profile) != "" } {
+    	puts "use profile : $_flags(profile)"
+    	set env(PROFILE) $_flags(profile)
+    	if [file exists "$_flags(profile).env"] {
+    		puts "Load file $_flags(profile).env"
+    		_parseFile "$_flags(profile).env"
+    	}
     }
 
     # Parse it
@@ -209,6 +219,11 @@ proc _processCommandLine {args} {
 		    set _flags(file) [lindex $args 0]
 		    set args [lreplace $args 0 0]
 		}
+		"-P" - 
+		"--profile" {
+			set _flags(profile) [lindex $args 0]
+		    set args [lreplace $args 0 0]
+		}
 		"-h" -
 		"--help" {
 		    _help
@@ -256,6 +271,9 @@ proc _help {} {
 -p 
 --packages 
       Recursively process directories that contain a pkgIndex.tcl file.
+-P
+--profile 
+      enable profiles
 -r 
 --recursive 
       After processing the current directory, mash will process

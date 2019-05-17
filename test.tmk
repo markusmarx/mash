@@ -3,6 +3,7 @@ EQUAL = test=test
 TWO_VARS = $(OS) $(EQUAL)
 TEST = ""
 TESTVAR = "testvar1"
+
 test:
 	exec ls
 	file mkdir testobject
