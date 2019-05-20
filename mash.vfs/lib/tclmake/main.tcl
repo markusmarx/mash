@@ -98,6 +98,15 @@ proc _tclmake {args} {
 		return 1
     }
 
+    if { $_flags(profile) != "" } {
+    	puts "use profile : $_flags(profile)"
+    	set _vars(PROFILE) $_flags(profile)
+    	if [file exists "$_flags(profile).env"] {
+    		puts "Load file $_flags(profile).env"
+    		_parseFile "$_flags(profile).env"
+    	}
+    }
+
     # Find the makefile
     set file ""
     if { $_flags(file) != "" } {
@@ -142,15 +151,6 @@ proc _tclmake {args} {
     }
     if $_flags(debug) {
 		puts "Reading file \"$file\""
-    }
-
-    if { $_flags(profile) != "" } {
-    	puts "use profile : $_flags(profile)"
-    	set env(PROFILE) $_flags(profile)
-    	if [file exists "$_flags(profile).env"] {
-    		puts "Load file $_flags(profile).env"
-    		_parseFile "$_flags(profile).env"
-    	}
     }
 
     # Parse it
